@@ -1,0 +1,10 @@
+{
+  "eventName": "Школьная олимпиада",
+  "maxScore": 100,
+  "participants": [
+    {"id": "sample-1", "name": "Анна Смирнова", "className": "9А", "score": 94},
+    {"id": "sample-2", "name": "Максим Иванов", "className": "10Б", "score": 88},
+    {"id": "sample-3", "name": "София Петрова", "className": "9А", "score": 97},
+    {"id": "sample-4", "name": "Даниил Козлов", "className": "8В", "score": 76}
+  ]
+}

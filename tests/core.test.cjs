@@ -1,0 +1,22 @@
+const assert = require('node:assert/strict');
+const {ranking,parseCSV,csvCell}=require('../js/core');
+const {statistics}=require('../js/core');
+assert.deepEqual(ranking([{name:'А',score:10},{name:'Б',score:null},{name:'В',score:10},{name:'Г',score:0}]).map(p=>p.rank),[1,1,3]);
+assert.deepEqual(parseCSV('\uFEFFФИО;Класс;Баллы\r\n"Иван; Иванов";9А;"1,5"\r\nАнна;8Б;'),[{name:'Иван; Иванов',className:'9А',score:1.5},{name:'Анна',className:'8Б',score:null}]);
+assert.equal(parseCSV('name,class,score\n"Иван ""Лучший""",9,0')[0].name,'Иван "Лучший"');
+assert.throws(()=>parseCSV('name,class,score\n"Иван,9,1'));
+assert.throws(()=>parseCSV('name,class,score\nИван,9,no'));
+assert.equal(csvCell('=1+2'),'"\'=1+2"');
+assert.throws(()=>parseCSV('name,class,score\nИван,9А,1,5'), /столбцов/);
+assert.throws(()=>parseCSV('name,class,score\nИван,9А'), /столбцов/);
+assert.throws(()=>parseCSV('name,class,score\n"Иван"лишнее,9А,10'), /после кавычки/);
+assert.equal(parseCSV('\n\r\nФИО;Класс;Баллы\nИван;9А;10')[0].score,10);
+assert.equal(parseCSV('"Иван\nИванов";9А;1,5')[0].score,1.5);
+assert.equal(parseCSV('name,class,score\n"Иван"  ,9А,"1,5"')[0].score,1.5);
+assert.equal(parseCSV('Место;ФИО;Класс;Баллы;Статус\n1;Иван;9А;10;Проверено')[0].score,10);
+assert.deepEqual(statistics([{score:0},{score:25},{score:50},{score:75},{score:100},{score:null}],100),
+  {checked:5,average:50,best:100,bins:[1,1,1,2]});
+assert.deepEqual(statistics([],100),{checked:0,average:0,best:0,bins:[0,0,0,0]});
+const immutable=[{name:'Б',score:1},{name:'А',score:1}];
+ranking(immutable);assert.equal(immutable[0].name,'Б');
+console.log('Core: ranking, CSV validation, statistics and export passed');
